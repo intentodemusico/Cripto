@@ -1,6 +1,6 @@
-# --------------------------- Vernam Cypher ------------------------------- #
+# ----------------------------- Affine Cypher ----------------------------- #
 # This Python code is for encrypting purposes. The algorithm executes a     #
-# Vernam encryption, considering a key entered by console.                  #
+# substitution cypher according to the equation: C = (a*M + b) mod (n).     #
 # Author: Julián Darío Miranda                                              #
 # Institution: Pontifical Bolivarian University, Bucaramanga, Colombia      #
 # Subject: Information Security Specialization                              #
@@ -17,25 +17,28 @@ def normalize_text(plain_text):
     plain_text = plain_text.replace('Í', 'I')
     plain_text = plain_text.replace('Ó', 'O')
     plain_text = plain_text.replace('Ú', 'U')
-    plain_text = re.sub('(?![A-Z])(?![0-9]).', '', plain_text)
+    plain_text = re.sub('(?![A-Z]).', '', plain_text)
     plain_text = re.sub(' +', '', plain_text)
     return plain_text
 
-get_bin = lambda x, n: format(x, 'b').zfill(n)
+#x=normalize_text("Ay perrito pénsjajs")
+##for elemento in x:
+##    print(elemento)
+a = input("Enter the 'a' value: ")
+while not a.isdigit(): a = input("Enter a correct 'a' value: ")
+a = int(a)
+    
+b = input("Enter the 'b' value: ")
+while not b.isdigit(): b = input("Enter a correct 'b' value: ")
+b = int(b)
 
 plain_text = input('Enter the text to be encrypted: ')
-plain_text = normalize_text(plain_text)
-len_text = len(plain_text)
 
-key = input('Enter the key (text only): ')
-key = normalize_text(key)
-key = key*(len_text//len(key))
-key += key[0:len_text-len(key)]
-
-result = ''
+replaced_text = normalize_text(plain_text)
+len_text = len(replaced_text)
 
 for i in range(0,len_text):
-    result += get_bin(ord(plain_text[i])^ord(key[i]),8)
-    print(result)
-
-print('Vernam encryption result: ' + hex(int(result, 2))[2:].upper())
+    if replaced_text[i] is not " ":
+        replaced_text = replaced_text[:i] + chr((a*(ord(replaced_text[i])-65) + b)%26 + 65) + replaced_text[i+1:]
+        
+print('Affine encryption result: ' + replaced_text)
